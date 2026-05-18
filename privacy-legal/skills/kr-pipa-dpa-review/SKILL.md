@@ -167,6 +167,50 @@ verify sources, role classification, cross-border transfer basis, and final
 wording before the document is signed, sent, filed, or relied on externally.
 ```
 
+## Example-Driven Calibration
+
+Use the synthetic fixture pair below as the calibration example for issue
+spotting and output shape:
+
+- Input fixture:
+  `tests/fixtures/kr_pipa_dpa_review/sample_vendor_dpa.md`
+- Expected output skeleton:
+  `tests/fixtures/kr_pipa_dpa_review/expected_review_skeleton.md`
+
+When a vendor DPA resembles the fixture, produce the same kind of review:
+
+- `Verdict: conditional` when the document is fixable but has required gaps.
+- Treat broad AI training, model improvement, analytics, or service-improvement
+  rights as purpose-limitation issues under the processing-scope review.
+- Treat unrestricted subprocessor appointment as a re-entrustment and
+  supervision issue.
+- Treat generic overseas processing language as a 국외 이전 required gap when it
+  omits recipient, country, transferred items, purpose, retention period,
+  safeguards, or legal basis.
+- Treat vague breach notification tied to completion of internal investigation
+  as a breach notification gap.
+- Treat generic security language as a 제29조 source-backed issue when no
+  concrete technical, managerial, or physical safeguards are stated.
+
+Do not copy the fixture facts into a real review. Use the fixture only to
+calibrate structure, severity, and source labels.
+
+## Quality Checklist
+
+Before finalizing the review, verify that the output includes:
+
+- A `pass / conditional / fail` verdict.
+- Role classification: 처리위탁, 제3자 제공 risk, ambiguous, or not enough facts.
+- Cross-border status: whether 국외 이전 is identified or unknown.
+- Source status for 제26조, 제28조의8, 제29조, and 제34조.
+- A `required gaps` section that separates blocking issues from softer drafting
+  improvements.
+- A `recommended improvements` section for non-blocking improvements.
+- Explicit handling of AI training and model-improvement clauses.
+- Explicit handling of subprocessor / re-entrustment language.
+- Explicit handling of breach notification timing.
+- `requires_professional_review` in the review gate.
+
 ## Verdict Rules
 
 - `pass`: no required gaps after source-backed review; still requires final
@@ -186,4 +230,3 @@ wording before the document is signed, sent, filed, or relied on externally.
   drafting after the review.
 - It does not treat U.S., GDPR, or global DPA language as sufficient for Korea
   without Korea-specific source checks.
-

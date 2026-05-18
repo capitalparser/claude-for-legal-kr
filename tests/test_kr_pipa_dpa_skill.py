@@ -154,3 +154,22 @@ def test_sample_dpa_review_fixture_defines_end_to_end_expected_shape():
         "제28조의8",
     ]:
         assert phrase in expected
+
+
+def test_skill_embeds_fixture_driven_example_and_quality_checklist():
+    skill = read(SKILL)
+
+    for phrase in [
+        "Example-Driven Calibration",
+        "tests/fixtures/kr_pipa_dpa_review/sample_vendor_dpa.md",
+        "tests/fixtures/kr_pipa_dpa_review/expected_review_skeleton.md",
+        "Quality Checklist",
+        "AI training",
+        "subprocessor",
+        "breach notification",
+        "제26조",
+        "제28조의8",
+        "제29조",
+        "제34조",
+    ]:
+        assert phrase in skill
