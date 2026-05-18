@@ -54,6 +54,22 @@ Do not call `npx korean-law-mcp@latest search_law ...` for this smoke test. That
 invokes the MCP stdio server binary, which waits for MCP protocol messages and
 can look like a timeout.
 
+Current smoke coverage:
+
+- Search `개인정보 보호법`.
+- Parse the returned `MST`.
+- Retrieve PIPA core articles:
+  - `제26조`
+  - `제28조의8`
+  - `제29조`
+  - `제34조`
+
+Expected success line:
+
+```text
+PIPA deep smoke ok: core articles returned text
+```
+
 ### Local MCP Install
 
 For local client setup, the upstream project documents:

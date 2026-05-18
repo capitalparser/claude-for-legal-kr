@@ -8,6 +8,7 @@ SOURCE_CATALOG = ROOT / "references" / "korea" / "source-catalog.md"
 MCP_GUIDE = ROOT / "docs" / "implementation" / "korean-law-mcp-setup.md"
 PLAYBOOK = ROOT / "privacy-legal" / "references" / "korea-pipa-dpa-playbook.md"
 FIXTURE_DIR = ROOT / "tests" / "fixtures" / "korean_law_mcp"
+REVIEW_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "kr_pipa_dpa_review"
 SMOKE = ROOT / "scripts" / "korean_law_mcp_smoke.py"
 
 
@@ -118,3 +119,38 @@ def test_live_smoke_script_is_api_key_gated_and_documents_user_entrypoint():
     assert '"korean-law-mcp@latest",' in smoke
     assert "python3 scripts/korean_law_mcp_smoke.py" in guide
     assert "export LAW_OC=" in guide
+
+
+def test_live_smoke_script_fetches_pipa_core_articles_after_search():
+    smoke = read(SMOKE)
+
+    for article in ["제26조", "제28조의8", "제29조", "제34조"]:
+        assert article in smoke
+
+    assert "get_law_text" in smoke
+    assert "PIPA_CORE_ARTICLES" in smoke
+    assert "PIPA deep smoke ok" in smoke
+
+
+def test_sample_dpa_review_fixture_defines_end_to_end_expected_shape():
+    sample = read(REVIEW_FIXTURE_DIR / "sample_vendor_dpa.md")
+    expected = read(REVIEW_FIXTURE_DIR / "expected_review_skeleton.md")
+
+    for phrase in [
+        "국외 이전",
+        "AI training",
+        "subprocessor",
+        "breach notification",
+    ]:
+        assert phrase in sample
+
+    for phrase in [
+        "Verdict: conditional",
+        "required gaps",
+        "recommended improvements",
+        "source status",
+        "requires_professional_review",
+        "제26조",
+        "제28조의8",
+    ]:
+        assert phrase in expected

@@ -13,11 +13,13 @@ Do not print the API key or commit local key files.
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
 
 
 QUERY = "개인정보 보호법"
+PIPA_CORE_ARTICLES = ("제26조", "제28조의8", "제29조", "제34조")
 
 
 def main() -> int:
@@ -30,17 +32,69 @@ def main() -> int:
     env = os.environ.copy()
     env["LAW_OC"] = law_oc
 
+    search_result = _run_korean_law(
+        env,
+        [
+            "search_law",
+            "--query",
+            QUERY,
+            "--display",
+            "5",
+        ],
+    )
+    if search_result.returncode != 0:
+        return search_result.returncode
+
+    combined = search_result.output
+    if QUERY not in combined or ("MST" not in combined and "법령ID" not in combined):
+        print("korean-law-mcp smoke returned unexpected output", file=sys.stderr)
+        print(_redact(combined), file=sys.stderr)
+        return 1
+
+    mst = _extract_mst(combined)
+    if not mst:
+        print("korean-law-mcp smoke could not parse MST from search output", file=sys.stderr)
+        print(_redact(combined), file=sys.stderr)
+        return 1
+
+    print("korean-law-mcp smoke ok: PIPA search returned law identifiers")
+
+    for article in PIPA_CORE_ARTICLES:
+        article_result = _run_korean_law(
+            env,
+            [
+                "get_law_text",
+                "--mst",
+                mst,
+                "--jo",
+                article,
+            ],
+        )
+        if article_result.returncode != 0:
+            return article_result.returncode
+        if article not in article_result.output and article.replace("의", "-") not in article_result.output:
+            print(f"korean-law-mcp smoke returned unexpected output for {article}", file=sys.stderr)
+            print(_redact(article_result.output), file=sys.stderr)
+            return 1
+
+    print("PIPA deep smoke ok: core articles returned text")
+    return 0
+
+
+class CommandResult:
+    def __init__(self, returncode: int, output: str) -> None:
+        self.returncode = returncode
+        self.output = output
+
+
+def _run_korean_law(env: dict[str, str], args: list[str]) -> CommandResult:
     command = [
         "npx",
         "-y",
         "-p",
         "korean-law-mcp@latest",
         "korean-law",
-        "search_law",
-        "--query",
-        QUERY,
-        "--display",
-        "5",
+        *args,
     ]
 
     try:
@@ -59,21 +113,22 @@ def main() -> int:
         print("command should invoke the korean-law CLI, not the MCP stdio server", file=sys.stderr)
         if combined.strip():
             print(_redact(combined), file=sys.stderr)
-        return 124
+        return CommandResult(124, combined)
 
     combined = (result.stdout or "") + "\n" + (result.stderr or "")
     if result.returncode != 0:
         print("korean-law-mcp smoke failed", file=sys.stderr)
         print(_redact(combined), file=sys.stderr)
-        return result.returncode
+        return CommandResult(result.returncode, combined)
 
-    if QUERY not in combined or ("MST" not in combined and "법령ID" not in combined):
-        print("korean-law-mcp smoke returned unexpected output", file=sys.stderr)
-        print(_redact(combined), file=sys.stderr)
-        return 1
+    return CommandResult(0, combined)
 
-    print("korean-law-mcp smoke ok: PIPA search returned law identifiers")
-    return 0
+
+def _extract_mst(text: str) -> str | None:
+    match = re.search(r"MST:\s*(\d+)", text)
+    if match:
+        return match.group(1)
+    return None
 
 
 def _redact(text: str) -> str:

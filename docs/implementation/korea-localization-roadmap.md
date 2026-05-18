@@ -21,6 +21,8 @@ source-backed workflow design, not translation.
       guidance.
 - [x] Add API-key-gated `korean-law-mcp` live smoke script that skips safely
       until `LAW_OC` or `KOREAN_LAW_API_KEY` is set.
+- [x] Extend the live smoke script to retrieve PIPA core articles after
+      searching for `개인정보 보호법`.
 
 ## Phase 2 - First Plugin Wedge
 
@@ -45,7 +47,8 @@ Recommended first wedge:
 Required gaps:
 
 - Live `korean-law-mcp` smoke test has not been run with a real Law.go.kr OC
-  key in this workspace.
+  key in this Codex session; the user shell has reported successful PIPA search,
+  and the next run should confirm core article retrieval.
 - No plugin install smoke test yet.
 
 Recommended gaps:
