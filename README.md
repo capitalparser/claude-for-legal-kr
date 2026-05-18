@@ -1,4 +1,15 @@
-# Claude for Legal
+# Claude for Legal KR
+
+> Korea-localized fork workspace for
+> [`anthropics/claude-for-legal`](https://github.com/anthropics/claude-for-legal).
+> This fork is experimental and preserves the upstream Apache-2.0 license,
+> attribution, and review-gate posture.
+
+For Korea localization scope, source-connector strategy, and current status,
+see [KOREA.md](KOREA.md), [CONTEXT.md](CONTEXT.md), and
+[ADR 0001](docs/adr/0001-korea-localized-fork-and-source-connector.md).
+
+# Upstream: Claude for Legal
 
 Reference agents, skills, and data connectors for the legal workflows we see most — in-house commercial, privacy, product, corporate, employment, litigation, regulatory, AI governance, IP, and the learning side of the practice (law school clinics and students).
 
