@@ -15,9 +15,9 @@ source-backed workflow design, not translation.
 ## Phase 1 - Source Connector Integration
 
 - [x] Add `references/korea/source-catalog.md`.
-- [ ] Document `korean-law-mcp` install/configuration.
-- [ ] Define the connector response fields skills may rely on.
-- [ ] Add fixture examples for retrieved Korean statutes, cases, and regulator
+- [x] Document `korean-law-mcp` install/configuration.
+- [x] Define the connector response fields skills may rely on.
+- [x] Add fixture examples for retrieved Korean statutes, cases, and regulator
       guidance.
 
 ## Phase 2 - First Plugin Wedge
@@ -42,8 +42,7 @@ Recommended first wedge:
 
 Required gaps:
 
-- MCP install guide absent.
-- No Korea-specific skill tests yet.
+- Live `korean-law-mcp` smoke test absent.
 - No plugin install smoke test yet.
 
 Recommended gaps:

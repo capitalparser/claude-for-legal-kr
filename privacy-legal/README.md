@@ -30,6 +30,7 @@ Your configuration is stored at `~/.claude/plugins/config/claude-for-legal/priva
 | `/privacy-legal:cold-start-interview` | Cold-start interview |
 | `/privacy-legal:use-case-triage [activity]` | Does this need a PIA? Quick classification + conditions |
 | `/privacy-legal:dpa-review [file]` | Review a DPA against your playbook (auto-detects direction) |
+| `/privacy-legal:kr-pipa-dpa-review [file]` | Korea PIPA review for DPA, processing entrustment, overseas transfer, and AI/vendor data clauses |
 | `/privacy-legal:dsar-response` | Walk through a DSAR and draft the response |
 | `/privacy-legal:pia-generation [feature]` | Generate a PIA in your house style |
 | `/privacy-legal:reg-gap-analysis [regulation]` | Diff a new reg against current policy/practice |
@@ -43,6 +44,7 @@ Your configuration is stored at `~/.claude/plugins/config/claude-for-legal/priva
 | **cold-start-interview** | Writes CLAUDE.md from interview + seed docs |
 | **use-case-triage** | Does this need a PIA / DPIA / can it proceed? Policy conflict check + handoffs |
 | **dpa-review** | Bi-directional (processor/controller) DPA term-by-term review |
+| **kr-pipa-dpa-review** | Korea PIPA/DPA review for 처리위탁, 제3자 제공 risk, 국외 이전, and AI/vendor clauses |
 | **dsar-response** | Identity verification → system walk → exemptions → response draft |
 | **pia-generation** | PIA in house format, with policy consistency check |
 | **reg-gap-analysis** | New reg vs. current state, remediation plan |
@@ -76,6 +78,17 @@ question, and offer to kick off the PIA in the same conversation.
 
 Output: direction auto-detected, term-by-term vs. playbook, proposed redlines, policy consistency check.
 
+### 3A. Review a DPA for Korea PIPA
+
+```
+/privacy-legal:kr-pipa-dpa-review vendor-dpa.pdf
+```
+
+Output: pass / conditional / fail verdict, required gaps, recommended improvements,
+source status, 처리위탁 vs 제3자 제공 classification, 국외 이전 flags, and a
+professional review gate. For source-backed Korean law checks, connect
+`korean-law-mcp`.
+
 ### 4. Handle a DSAR
 
 ```
@@ -108,6 +121,7 @@ privacy-legal/
 │   ├── cold-start-interview/
 │   ├── use-case-triage/
 │   ├── dpa-review/
+│   ├── kr-pipa-dpa-review/
 │   ├── dsar-response/
 │   ├── pia-generation/
 │   ├── reg-gap-analysis/
