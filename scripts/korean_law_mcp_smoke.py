@@ -4,8 +4,9 @@
 This script is intentionally API-key gated:
 
 - Without LAW_OC or KOREAN_LAW_API_KEY, it exits 0 with a skip message.
-- With a key, it runs the npm-published korean-law-mcp CLI via npx and verifies
-  that a basic PIPA law search returns the expected law name and identifier.
+- With a key, it runs the npm-published korean-law CLI from the korean-law-mcp
+  package via npx and verifies that a basic PIPA law search returns the
+  expected law name and identifier.
 
 Do not print the API key or commit local key files.
 """
@@ -32,7 +33,9 @@ def main() -> int:
     command = [
         "npx",
         "-y",
+        "-p",
         "korean-law-mcp@latest",
+        "korean-law",
         "search_law",
         "--query",
         QUERY,
@@ -40,15 +43,23 @@ def main() -> int:
         "5",
     ]
 
-    result = subprocess.run(
-        command,
-        cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-        env=env,
-        text=True,
-        capture_output=True,
-        timeout=45,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            command,
+            cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            env=env,
+            text=True,
+            capture_output=True,
+            timeout=90,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        combined = (exc.stdout or "") + "\n" + (exc.stderr or "")
+        print("korean-law-mcp smoke timed out", file=sys.stderr)
+        print("command should invoke the korean-law CLI, not the MCP stdio server", file=sys.stderr)
+        if combined.strip():
+            print(_redact(combined), file=sys.stderr)
+        return 124
 
     combined = (result.stdout or "") + "\n" + (result.stderr or "")
     if result.returncode != 0:
@@ -75,4 +86,3 @@ def _redact(text: str) -> str:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

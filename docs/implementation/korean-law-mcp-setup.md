@@ -44,6 +44,16 @@ python3 scripts/korean_law_mcp_smoke.py
 Do not write either value into `.env`, git-tracked docs, fixtures, screenshots,
 logs, or test output.
 
+The smoke script calls the CLI binary through:
+
+```bash
+npx -y -p korean-law-mcp@latest korean-law search_law --query "개인정보 보호법" --display 5
+```
+
+Do not call `npx korean-law-mcp@latest search_law ...` for this smoke test. That
+invokes the MCP stdio server binary, which waits for MCP protocol messages and
+can look like a timeout.
+
 ### Local MCP Install
 
 For local client setup, the upstream project documents:

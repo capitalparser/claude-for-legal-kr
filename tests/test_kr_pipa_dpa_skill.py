@@ -113,5 +113,8 @@ def test_live_smoke_script_is_api_key_gated_and_documents_user_entrypoint():
     ]:
         assert phrase in smoke
 
+    assert '"-p",' in smoke
+    assert '"korean-law",' in smoke
+    assert '"korean-law-mcp@latest",' in smoke
     assert "python3 scripts/korean_law_mcp_smoke.py" in guide
     assert "export LAW_OC=" in guide
