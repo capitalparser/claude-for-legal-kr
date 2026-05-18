@@ -8,6 +8,7 @@ SOURCE_CATALOG = ROOT / "references" / "korea" / "source-catalog.md"
 MCP_GUIDE = ROOT / "docs" / "implementation" / "korean-law-mcp-setup.md"
 PLAYBOOK = ROOT / "privacy-legal" / "references" / "korea-pipa-dpa-playbook.md"
 FIXTURE_DIR = ROOT / "tests" / "fixtures" / "korean_law_mcp"
+SMOKE = ROOT / "scripts" / "korean_law_mcp_smoke.py"
 
 
 def read(path: Path) -> str:
@@ -95,3 +96,22 @@ def test_korean_law_mcp_fixtures_have_expected_source_schema():
             "user_supplied_unverified",
             "model_inference",
         }
+
+
+def test_live_smoke_script_is_api_key_gated_and_documents_user_entrypoint():
+    smoke = read(SMOKE)
+    guide = read(MCP_GUIDE)
+
+    for phrase in [
+        "LAW_OC",
+        "KOREAN_LAW_API_KEY",
+        "npx",
+        "korean-law-mcp@latest",
+        "search_law",
+        "개인정보 보호법",
+        "skip",
+    ]:
+        assert phrase in smoke
+
+    assert "python3 scripts/korean_law_mcp_smoke.py" in guide
+    assert "export LAW_OC=" in guide

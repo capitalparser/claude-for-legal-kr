@@ -19,6 +19,8 @@ source-backed workflow design, not translation.
 - [x] Define the connector response fields skills may rely on.
 - [x] Add fixture examples for retrieved Korean statutes, cases, and regulator
       guidance.
+- [x] Add API-key-gated `korean-law-mcp` live smoke script that skips safely
+      until `LAW_OC` or `KOREAN_LAW_API_KEY` is set.
 
 ## Phase 2 - First Plugin Wedge
 
@@ -42,7 +44,8 @@ Recommended first wedge:
 
 Required gaps:
 
-- Live `korean-law-mcp` smoke test absent.
+- Live `korean-law-mcp` smoke test has not been run with a real Law.go.kr OC
+  key in this workspace.
 - No plugin install smoke test yet.
 
 Recommended gaps:

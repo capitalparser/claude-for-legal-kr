@@ -24,6 +24,26 @@ The upstream `korean-law-mcp` README documents Claude Code plugin installation:
 During install, provide the Law.go.kr Open API key (OC). The key must not be
 committed to this repository.
 
+## User API Hook
+
+When a test needs live Law.go.kr access, the user should attach the API key only
+as a local environment variable:
+
+```bash
+export LAW_OC="<your-law-go-kr-oc-key>"
+python3 scripts/korean_law_mcp_smoke.py
+```
+
+Alternative variable:
+
+```bash
+export KOREAN_LAW_API_KEY="<your-law-go-kr-oc-key>"
+python3 scripts/korean_law_mcp_smoke.py
+```
+
+Do not write either value into `.env`, git-tracked docs, fixtures, screenshots,
+logs, or test output.
+
 ### Local MCP Install
 
 For local client setup, the upstream project documents:
@@ -74,7 +94,7 @@ Skills should preserve these labels in outputs:
 
 - Confirm exact `korean-law-mcp` tool names exposed in the local Claude Code
   plugin runtime.
-- Add a local smoke test once a Law.go.kr Open API key is configured.
+- Run `python3 scripts/korean_law_mcp_smoke.py` once a Law.go.kr Open API key is
+  configured.
 - Add fixtures for representative MCP responses so CI does not require live
   legal-source access.
-
