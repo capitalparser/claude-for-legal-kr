@@ -1,13 +1,153 @@
 # Claude for Legal KR
 
-> Korea-localized fork workspace for
-> [`anthropics/claude-for-legal`](https://github.com/anthropics/claude-for-legal).
-> This fork is experimental and preserves the upstream Apache-2.0 license,
-> attribution, and review-gate posture.
+Korea-facing legal workflow layer for lawyers and legal/compliance operators who
+already use Korean legal source tools such as `korean-law-mcp`.
 
-For Korea localization scope, source-connector strategy, and current status,
-see [KOREA.md](KOREA.md), [CONTEXT.md](CONTEXT.md), and
-[ADR 0001](docs/adr/0001-korea-localized-fork-and-source-connector.md).
+법제처 MCP는 법령과 판례를 찾아주는 검색 인프라입니다.
+`claude-for-legal-kr`은 그 검색 결과를 실무 검토 절차에 넣어 계약서,
+DPA, 규제 검토 메모, gap table, 수정 요청안을 만들어주는 업무 레이어입니다.
+
+In short: **Korean legal-source retrieval + repeatable legal review workflows.**
+
+This is a public Korea-localized fork of
+[`anthropics/claude-for-legal`](https://github.com/anthropics/claude-for-legal).
+It preserves the upstream Apache-2.0 license, attribution, and attorney-review
+posture.
+
+## What This Adds On Top Of Korean Law MCP
+
+| If you only use Korean law MCP | With `claude-for-legal-kr` |
+|---|---|
+| Search laws, cases, and administrative materials | Apply those sources to a legal workflow |
+| Ask for article text such as PIPA Article 26 | Review a DPA clause-by-clause against PIPA issues |
+| Get source identifiers such as MST / law ID | Produce a memo with source status and review gates |
+| Manually decide what is blocking | Separate `required gaps` from `recommended improvements` |
+| Manually rewrite findings into a client/internal memo | Generate a structured first-draft review memo |
+
+The MCP is the source engine. This repository is the workflow layer.
+
+## Current Korea Wedge: PIPA / DPA Review
+
+The first implemented Korea-specific workflow is:
+
+```text
+/privacy-legal:kr-pipa-dpa-review [file | contract excerpt]
+```
+
+It is designed for vendor DPAs, data processing entrustment agreements, SaaS
+privacy addenda, and AI/vendor data-processing clauses.
+
+It checks for:
+
+- 처리위탁 vs 제3자 제공 risk
+- 개인정보 국외 이전 gaps
+- subprocessor / 재위탁 controls
+- AI training, analytics, and service-improvement purposes
+- security controls under PIPA Article 29
+- breach notification timing
+- deletion/return and backup retention
+- source status and professional review gate
+
+Expected output shape:
+
+```text
+Verdict: conditional
+
+Required gaps:
+- 국외 이전 수령자, 국가, 이전 항목, 보유기간, 보호조치가 불명확함
+- AI training 목적이 처리위탁 범위를 넘을 수 있음
+- subprocessor 사전 통지 또는 승인 구조가 없음
+- breach notification이 내부 조사 완료 후로 되어 있어 한국 고객 대응에 늦을 수 있음
+
+Recommended improvements:
+- Korea PIPA addendum 추가
+- 재위탁자 목록 별첨화
+- 삭제 확인서 및 backup retention carveout 구체화
+
+Source status:
+- 제26조: verified_source
+- 제28조의8: verified_source
+- 제29조: verified_source
+- 제34조: verified_source
+
+Review gate:
+- requires_professional_review
+```
+
+## Quick Smoke Test
+
+`korean-law-mcp` is not vendored into this repository. It is used as the
+source connector.
+
+```bash
+cd /Users/kjun/vault/01_Projects/claude-for-legal-kr
+export LAW_OC="<your-law-go-kr-oc-key>"
+python3 scripts/korean_law_mcp_smoke.py
+```
+
+Expected success line:
+
+```text
+PIPA deep smoke ok: core articles returned text
+```
+
+The smoke test searches `개인정보 보호법`, parses the returned MST, then retrieves:
+
+- 제26조
+- 제28조의8
+- 제29조
+- 제34조
+
+Do not commit API keys, `.env` files, screenshots, or logs containing keys.
+
+## Try The Synthetic DPA Review Fixture
+
+After installing the `privacy-legal` plugin in Claude Code, run:
+
+```text
+/privacy-legal:kr-pipa-dpa-review tests/fixtures/kr_pipa_dpa_review/sample_vendor_dpa.md
+```
+
+Compare the result with:
+
+```text
+tests/fixtures/kr_pipa_dpa_review/expected_review_skeleton.md
+```
+
+The review should surface AI training, subprocessor, overseas transfer, breach
+notification, and security-control issues with source status and a professional
+review gate.
+
+## Who This Is For
+
+- Lawyers already using AI or MCP-based legal search.
+- In-house legal, privacy, and compliance teams reviewing DPAs or vendor terms.
+- Operators who need a first-pass issue list before attorney review.
+- Teams that want repeatable memo, gap table, and escalation formats.
+
+It is less useful if you only need ad hoc law search, do not want structured
+workflows, or expect AI output to be externally sent without attorney review.
+
+## Important Safety Posture
+
+Every output from these plugins is a draft for attorney or responsible
+professional review. It is not legal advice, not a legal conclusion, and not a
+substitute for a lawyer.
+
+The system is designed to make review faster by surfacing:
+
+- jurisdiction assumptions,
+- source status,
+- required vs recommended gaps,
+- review gates before signing, sending, filing, or relying externally.
+
+## Project Docs
+
+- Korea scope and status: [KOREA.md](KOREA.md)
+- Domain context: [CONTEXT.md](CONTEXT.md)
+- Source connector ADR: [ADR 0001](docs/adr/0001-korea-localized-fork-and-source-connector.md)
+- MCP setup: [docs/implementation/korean-law-mcp-setup.md](docs/implementation/korean-law-mcp-setup.md)
+- Lawyer-facing explainer: [docs/product/mcp-vs-claude-legal-kr-for-lawyers.md](docs/product/mcp-vs-claude-legal-kr-for-lawyers.md)
 
 # Upstream: Claude for Legal
 
