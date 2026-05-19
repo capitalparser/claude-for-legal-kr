@@ -10,6 +10,10 @@ PLAYBOOK = ROOT / "privacy-legal" / "references" / "korea-pipa-dpa-playbook.md"
 FIXTURE_DIR = ROOT / "tests" / "fixtures" / "korean_law_mcp"
 REVIEW_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "kr_pipa_dpa_review"
 SMOKE = ROOT / "scripts" / "korean_law_mcp_smoke.py"
+PLUGIN_SMOKE = ROOT / "scripts" / "check_claude_plugin_contract.py"
+PLUGIN_SMOKE_DOC = ROOT / "docs" / "implementation" / "claude-code-plugin-smoke.md"
+LLM_ADAPTER_DOC = ROOT / "docs" / "implementation" / "generic-llm-adapter-contract.md"
+LLM_OUTPUT_SCHEMA = ROOT / "schemas" / "kr_pipa_dpa_review.schema.json"
 
 
 def read(path: Path) -> str:
@@ -173,3 +177,42 @@ def test_skill_embeds_fixture_driven_example_and_quality_checklist():
         "제34조",
     ]:
         assert phrase in skill
+
+
+def test_claude_code_plugin_contract_smoke_assets_exist():
+    script = read(PLUGIN_SMOKE)
+    doc = read(PLUGIN_SMOKE_DOC)
+
+    for phrase in [
+        "marketplace.json",
+        "privacy-legal",
+        "kr-pipa-dpa-review",
+        "sample_vendor_dpa.md",
+        "expected_review_skeleton.md",
+    ]:
+        assert phrase in script
+        assert phrase in doc
+
+
+def test_generic_llm_adapter_contract_and_schema_exist():
+    doc = read(LLM_ADAPTER_DOC)
+    schema = read(LLM_OUTPUT_SCHEMA)
+
+    for phrase in [
+        "korean-law-mcp",
+        "source_status",
+        "required_gaps",
+        "recommended_improvements",
+        "requires_professional_review",
+        "tool sequence",
+    ]:
+        assert phrase in doc
+
+    for phrase in [
+        '"verdict"',
+        '"required_gaps"',
+        '"recommended_improvements"',
+        '"source_log"',
+        '"review_gate"',
+    ]:
+        assert phrase in schema

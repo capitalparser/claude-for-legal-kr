@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KR PIPA DPA Review",
+  "type": "object",
+  "required": [
+    "verdict",
+    "role_classification",
+    "cross_border_status",
+    "source_status",
+    "required_gaps",
+    "recommended_improvements",
+    "source_log",
+    "review_gate"
+  ],
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": ["pass", "conditional", "fail"]
+    },
+    "role_classification": {
+      "type": "string",
+      "description": "처리위탁, 제3자 제공 risk, ambiguous, or not enough facts."
+    },
+    "cross_border_status": {
+      "type": "string",
+      "description": "국외 이전 identified, none identified, or unknown."
+    },
+    "source_status": {
+      "type": "string",
+      "description": "Summary of verified_source, user_supplied_unverified, and model_inference coverage."
+    },
+    "required_gaps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/gap"
+      }
+    },
+    "recommended_improvements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/improvement"
+      }
+    },
+    "source_log": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "review_gate": {
+      "type": "object",
+      "required": ["status", "message"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "requires_professional_review"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "gap": {
+      "type": "object",
+      "required": ["gap", "pipa_anchor", "source_status", "proposed_fix"],
+      "properties": {
+        "gap": { "type": "string" },
+        "pipa_anchor": { "type": "string" },
+        "source_status": { "$ref": "#/$defs/source_status" },
+        "proposed_fix": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "improvement": {
+      "type": "object",
+      "required": ["improvement", "benefit", "source_status", "proposed_action"],
+      "properties": {
+        "improvement": { "type": "string" },
+        "benefit": { "type": "string" },
+        "source_status": { "$ref": "#/$defs/source_status" },
+        "proposed_action": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["source", "identifier", "retrieved", "used_for"],
+      "properties": {
+        "source": { "type": "string" },
+        "identifier": { "type": "string" },
+        "retrieved": { "type": "boolean" },
+        "used_for": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "source_status": {
+      "type": "string",
+      "enum": ["verified_source", "user_supplied_unverified", "model_inference"]
+    }
+  },
+  "additionalProperties": false
+}

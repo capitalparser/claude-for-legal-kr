@@ -189,6 +189,21 @@ Review gate:
 - requires_professional_review
 ```
 
+정적 plugin contract는 아래 명령으로 확인합니다.
+
+```bash
+python3 scripts/check_claude_plugin_contract.py
+```
+
+실제 Claude Code 설치/실행 smoke 절차는
+[docs/implementation/claude-code-plugin-smoke.md](docs/implementation/claude-code-plugin-smoke.md)를
+참조하세요.
+
+Claude Code가 아닌 다른 LLM runtime에 붙이려면
+[docs/implementation/generic-llm-adapter-contract.md](docs/implementation/generic-llm-adapter-contract.md)와
+[schemas/kr_pipa_dpa_review.schema.json](schemas/kr_pipa_dpa_review.schema.json)을
+adapter contract로 사용하면 됩니다.
+
 ## 현재 구현된 한국형 workflow
 
 ### `/privacy-legal:kr-pipa-dpa-review`
