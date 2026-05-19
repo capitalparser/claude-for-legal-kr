@@ -3,7 +3,7 @@
 한국 법령 MCP를 **검색 도구**에서 **실무 검토 워크플로우**로 확장하는
 Claude legal skill pack입니다.
 
-법제처 MCP나 `korean-law-mcp`만 쓰면 "개인정보보호법 제26조 찾아줘"까지는
+법제처 API나 `korean-law-mcp`만 쓰면 "개인정보보호법 제26조 찾아줘"까지는
 잘 됩니다. 그런데 실제 변호사·컴플라이언스 실무는 그 다음부터 시작됩니다.
 
 - 이 계약이 처리위탁인지, 제3자 제공 위험인지
@@ -24,7 +24,7 @@ source status, review gate를 얹습니다.
 
 이 프로젝트는
 [`anthropics/claude-for-legal`](https://github.com/anthropics/claude-for-legal)의
-한국형 공개 fork입니다. 원본 Apache-2.0 라이선스, attribution, 변호사 검토
+한국형 공개 fork입니다. 원본 Apache-2.0 라이선스, attribution
 전제는 유지합니다.
 
 ## 왜 좋은가?
