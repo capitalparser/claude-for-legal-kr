@@ -48,6 +48,8 @@ MCP tools:
 - `kr_legal_review`
   - Builds a provider-neutral Korean legal review payload from a question,
     document, or business situation.
+  - Defaults to `output_style="legal_review_memo_ko"`, returning a Korean
+    legal review memo draft in `display_document`.
   - Supports presets such as `general`, `privacy`, `commercial_contract`,
     `employment`, `corporate`, `tax`, `regulatory`, and `litigation`.
   - Does not claim to produce legal advice or a final legal conclusion.
@@ -125,12 +127,30 @@ The `review_gate` must include `requires_professional_review`.
 
 For the general workflow, the minimum output should include:
 
-- `verdict`
-- `issue_summary`
-- `required_gaps`
-- `recommended_next_steps`
-- `source_log`
-- `review_gate`
+- `display_document`: user-facing Korean legal review memo draft.
+- `machine_readable.verdict`
+- `machine_readable.issue_summary`
+- `machine_readable.required_gaps`
+- `machine_readable.recommended_next_steps`
+- `machine_readable.source_log`
+- `machine_readable.review_gate`
+
+The display document should use this Korean structure:
+
+```text
+법률검토 내역서
+1. 검토 결론
+2. 사안의 개요
+3. 질의의 취지
+4. 검토 대상 및 전제사실
+5. 관련 법령 및 확인 근거
+6. 주요 쟁점별 검토
+7. 필수 보완사항
+8. 권고사항
+9. 법무팀/변호사에게 전달할 질문
+10. 종합 의견
+11. 검토 한계 및 주의문구
+```
 
 ## Failure Rules
 

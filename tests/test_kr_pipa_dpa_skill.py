@@ -20,6 +20,7 @@ LLM_OUTPUT_SCHEMA = ROOT / "schemas" / "kr_pipa_dpa_review.schema.json"
 ADAPTER_SCAFFOLD = ROOT / "scripts" / "build_generic_llm_payload.py"
 UNIVERSAL_MCP = ROOT / "scripts" / "kr_legal_workflow_mcp.py"
 GENERAL_KR_WORKFLOW = ROOT / "references" / "korea" / "general-legal-review-workflow.md"
+LEGAL_MEMO_TEMPLATE = ROOT / "references" / "korea" / "legal-review-memo-template.md"
 UNIVERSAL_MCP_PLAN = (
     ROOT
     / "docs"
@@ -310,3 +311,55 @@ def test_readme_and_adapter_docs_position_mcp_for_legal_non_specialists():
         assert phrase in adapter_doc
 
     assert "Universal KR Legal MCP" in plan
+
+
+def test_kr_legal_review_defaults_to_korean_legal_review_memo_output():
+    request = (
+        json.dumps(
+            {
+                "jsonrpc": "2.0",
+                "id": 7,
+                "method": "tools/call",
+                "params": {
+                    "name": "kr_legal_review",
+                    "arguments": {
+                        "question": "SaaS 계약 체결 전에 회사 담당자가 확인할 법무 쟁점은?",
+                        "matter_context": "해외 SaaS 벤더와 연간 구독계약 체결 예정",
+                    },
+                },
+            },
+            ensure_ascii=False,
+        )
+        + "\n"
+    )
+    result = subprocess.run(
+        [sys.executable, str(UNIVERSAL_MCP)],
+        input=request,
+        capture_output=True,
+        text=True,
+        timeout=5,
+        check=True,
+    )
+    response = json.loads(result.stdout)
+    tool_text = response["result"]["content"][0]["text"]
+    payload = json.loads(tool_text)
+    display_document = payload["display_document"]
+    template = read(LEGAL_MEMO_TEMPLATE)
+
+    assert payload["output_style"] == "legal_review_memo_ko"
+    assert payload["machine_readable"]["review_gate"] == "requires_professional_review"
+    for phrase in [
+        "# 법률검토 내역서",
+        "## 1. 검토 결론",
+        "## 2. 사안의 개요",
+        "## 3. 질의의 취지",
+        "## 5. 관련 법령 및 확인 근거",
+        "## 6. 주요 쟁점별 검토",
+        "## 9. 법무팀/변호사에게 전달할 질문",
+        "## 11. 검토 한계 및 주의문구",
+        "SaaS 계약 체결 전에",
+    ]:
+        assert phrase in display_document
+
+    for phrase in ["법률검토 내역서", "사안의 개요", "검토 한계 및 주의문구"]:
+        assert phrase in template

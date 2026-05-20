@@ -116,11 +116,33 @@ Claude Code는 한 가지 실행 표면일 뿐입니다. 범용 MCP 클라이언
 현재 제공하는 범용 tool:
 
 - `kr_legal_source_search`: 한국 법령 조회 계획 또는 live lookup
-- `kr_legal_review`: 질문/문서/상황을 받아 법무 쟁점 메모용 payload 생성
+- `kr_legal_review`: 질문/문서/상황을 받아 한국어 법률검토 내역서 초안 생성
 
 이 MCP server는 LLM provider를 직접 호출하지 않습니다. Claude, OpenAI,
 Cursor, Windsurf, LangChain, local model 등 MCP를 붙이는 쪽 LLM이 최종
 답변을 작성하고, 이 repo는 한국 법령 source와 workflow context를 제공합니다.
+
+`kr_legal_review`의 기본 사용자 표시 결과물은 개발자용 JSON이 아니라 다음
+형식의 한국어 문서입니다.
+
+```text
+법률검토 내역서
+1. 검토 결론
+2. 사안의 개요
+3. 질의의 취지
+4. 검토 대상 및 전제사실
+5. 관련 법령 및 확인 근거
+6. 주요 쟁점별 검토
+7. 필수 보완사항
+8. 권고사항
+9. 법무팀/변호사에게 전달할 질문
+10. 종합 의견
+11. 검토 한계 및 주의문구
+```
+
+기계 검증용 `source_status`, `required_gaps`, `review_gate`는 내부 metadata로
+유지하되, 사용자가 읽는 화면은 법무팀에 전달 가능한 검토내역서 형태로
+제공합니다.
 
 PIPA/DPA는 `kr_legal_review(preset="privacy")`의 예시일 뿐이며, 장기적으로
 `general`, `commercial_contract`, `employment`, `corporate`, `tax`,
@@ -252,8 +274,8 @@ live lookup을 실행합니다.
 ### MCP: `kr_legal_review`
 
 문서, 질문, 업무 상황을 받아 LLM이 검토 메모를 작성할 수 있는 workflow
-payload를 반환합니다. 법률자문 완성본이 아니라 source status, gap,
-review gate가 포함된 초벌 검토 구조를 만듭니다.
+payload와 한국어 법률검토 내역서 초안을 반환합니다. 법률자문 완성본이
+아니라 source status, gap, review gate가 포함된 초벌 검토 구조입니다.
 
 ### `/privacy-legal:kr-pipa-dpa-review`
 
