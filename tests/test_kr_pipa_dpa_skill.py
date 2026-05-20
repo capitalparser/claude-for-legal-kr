@@ -14,6 +14,7 @@ PLUGIN_SMOKE = ROOT / "scripts" / "check_claude_plugin_contract.py"
 PLUGIN_SMOKE_DOC = ROOT / "docs" / "implementation" / "claude-code-plugin-smoke.md"
 LLM_ADAPTER_DOC = ROOT / "docs" / "implementation" / "generic-llm-adapter-contract.md"
 LLM_OUTPUT_SCHEMA = ROOT / "schemas" / "kr_pipa_dpa_review.schema.json"
+ADAPTER_SCAFFOLD = ROOT / "scripts" / "build_generic_llm_payload.py"
 
 
 def read(path: Path) -> str:
@@ -216,3 +217,17 @@ def test_generic_llm_adapter_contract_and_schema_exist():
         '"review_gate"',
     ]:
         assert phrase in schema
+
+
+def test_generic_llm_payload_builder_scaffold_exists():
+    script = read(ADAPTER_SCAFFOLD)
+
+    for phrase in [
+        "kr-pipa-dpa-review",
+        "korea-pipa-dpa-playbook",
+        "sample_vendor_dpa.md",
+        "kr_pipa_dpa_review.schema.json",
+        "document_text",
+        "response_schema",
+    ]:
+        assert phrase in script

@@ -52,6 +52,8 @@ Restart Claude Code, then confirm the command is available:
 
 ## End-To-End Sample DPA Smoke
 
+Status: passed in the user's Claude Code runtime on 2026-05-20.
+
 Run:
 
 ```text
@@ -76,6 +78,9 @@ Required output features:
 - breach notification issue
 - PIPA anchors: 제26조, 제28조의8, 제29조, 제34조
 
+If these appear, the workflow is no longer only a static/plugin-file smoke. It
+has been exercised by an actual Claude Code LLM runtime.
+
 ## Live Source Precondition
 
 Before relying on `verified_source`, run:
@@ -92,4 +97,3 @@ PIPA deep smoke ok: core articles returned text
 ```
 
 Do not commit API keys, `.env` files, screenshots, or logs containing keys.
-

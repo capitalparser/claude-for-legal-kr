@@ -153,6 +153,8 @@ API 키는 절대 commit하지 마세요. `.env`, screenshot, log에도 남기�
 
 plugin 설치 후 synthetic DPA fixture로 테스트할 수 있습니다.
 
+현재 상태: Claude Code plugin runtime에서 sample DPA smoke가 통과했습니다.
+
 ```text
 /privacy-legal:kr-pipa-dpa-review tests/fixtures/kr_pipa_dpa_review/sample_vendor_dpa.md
 ```
@@ -203,6 +205,9 @@ Claude Code가 아닌 다른 LLM runtime에 붙이려면
 [docs/implementation/generic-llm-adapter-contract.md](docs/implementation/generic-llm-adapter-contract.md)와
 [schemas/kr_pipa_dpa_review.schema.json](schemas/kr_pipa_dpa_review.schema.json)을
 adapter contract로 사용하면 됩니다.
+
+현재 범용/OpenAI adapter는 contract와 schema 단계입니다. 실제 HTTP endpoint나
+OpenAI/Agents SDK wrapper는 다음 구현 단계입니다.
 
 ## 현재 구현된 한국형 workflow
 

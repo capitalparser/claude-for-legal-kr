@@ -6,6 +6,14 @@ This document defines what is needed to use `claude-for-legal-kr` outside
 Claude Code, for example in OpenAI, ChatGPT Apps, LangChain, a custom agent
 runtime, or another MCP-capable LLM client.
 
+Current status:
+
+- Claude Code plugin runtime: smoke passed.
+- Korean law source retrieval: live `korean-law-mcp` smoke passed with a user
+  supplied Law.go.kr OC key.
+- Generic/OpenAI adapter: contract and schema exist; executable endpoint is not
+  implemented yet.
+
 The core idea:
 
 1. Use `korean-law-mcp` as the source retrieval tool.
@@ -103,4 +111,3 @@ review = llm.generate(
 validate(review)
 block_external_use_until_human_review(review)
 ```
-
