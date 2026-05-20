@@ -294,10 +294,16 @@ def test_readme_and_adapter_docs_position_mcp_for_legal_non_specialists():
     plan = read(UNIVERSAL_MCP_PLAN)
 
     for phrase in [
+        "오픈소스 로컬 MCP",
+        "법제처 API 키와 검토 문서를 로컬에 둔 채",
         "법무 비전문가",
         "kr_legal_source_search",
         "kr_legal_review",
         "provider-neutral",
+        "Codex",
+        "Claude Desktop",
+        "Cursor",
+        "Windsurf",
     ]:
         assert phrase in readme
 

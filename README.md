@@ -1,7 +1,112 @@
 # Claude for Legal KR
 
-한국 법령 MCP를 **검색 도구**에서 **실무 법무 워크플로우**로 확장하는
-provider-neutral MCP/workflow pack입니다.
+한국 법령 기반 **오픈소스 로컬 MCP**입니다.
+
+법제처 API 키와 검토 문서를 로컬에 둔 채, Codex, Claude Desktop,
+Claude Code, Cursor, Windsurf 같은 MCP 클라이언트에 붙여 사용할 수 있습니다.
+특정 LLM 제공자에 종속되지 않는 provider-neutral 구조입니다.
+
+목표는 법률자문 자동화가 아니라, 회사 담당자나 개인이 법무팀·변호사에게
+묻기 전 필요한 쟁점과 자료를 **법률검토 내역서 초안**으로 정리하는 것입니다.
+
+```text
+로컬 MCP 클라이언트
+  -> claude-for-legal-kr
+    -> korean-law-mcp / 법제처 API
+    -> 법률검토 내역서 초안 + source status + 전문가 검토 gate
+```
+
+한 줄로 말하면:
+
+> 무료 오픈소스 로컬 MCP. 한국 법령 API를 붙여 법무팀에 넘길
+> 검토내역서 초안을 만듭니다.
+
+이 프로젝트는
+[`anthropics/claude-for-legal`](https://github.com/anthropics/claude-for-legal)의
+한국형 공개 fork입니다. 원본 Apache-2.0 라이선스, attribution
+전제는 유지합니다.
+
+## 빠른 시작: 로컬 MCP로 붙이기
+
+### 1. Clone
+
+```bash
+git clone https://github.com/capitalparser/claude-for-legal-kr
+cd claude-for-legal-kr
+```
+
+### 2. 법제처 API 키 설정
+
+법제처 Open API OC 키를 로컬 환경변수로 넣습니다.
+
+```bash
+export LAW_OC="<법제처 Open API OC 키>"
+python3 scripts/korean_law_mcp_smoke.py
+```
+
+성공하면 다음 문구가 나옵니다.
+
+```text
+PIPA deep smoke ok: core articles returned text
+```
+
+API 키는 절대 commit하지 마세요. `.env`, screenshot, log에도 남기지 않는
+것을 권장합니다.
+
+### 3. MCP 클라이언트에 등록
+
+MCP config에 아래처럼 추가합니다.
+
+```json
+{
+  "mcpServers": {
+    "claude-for-legal-kr": {
+      "command": "python3",
+      "args": [
+        "/absolute/path/to/claude-for-legal-kr/scripts/kr_legal_workflow_mcp.py"
+      ],
+      "env": {
+        "LAW_OC": "<법제처 Open API OC 키>"
+      }
+    }
+  }
+}
+```
+
+Codex에서는 CLI로도 등록할 수 있습니다.
+
+```bash
+codex mcp add claude-for-legal-kr \
+  --env LAW_OC="$LAW_OC" \
+  -- python3 /absolute/path/to/claude-for-legal-kr/scripts/kr_legal_workflow_mcp.py
+```
+
+등록 후 tool 목록에 아래 2개가 보이면 됩니다.
+
+```text
+kr_legal_source_search
+kr_legal_review
+```
+
+### 4. 테스트 질문
+
+MCP가 붙은 LLM에서 이렇게 물어보세요.
+
+```text
+claude-for-legal-kr MCP를 사용해서 SaaS 계약 체결 전에
+회사 담당자가 확인할 법무 쟁점을 법률검토 내역서 형태로 정리해줘.
+```
+
+## 왜 local-first인가?
+
+- 법제처 API 키를 사용자 로컬 환경에 둘 수 있습니다.
+- 계약서, 약관, 내부 문서가 별도 hosted server로 가지 않습니다.
+- 오픈소스이므로 어떤 prompt와 workflow가 쓰이는지 직접 검토할 수 있습니다.
+- Codex, Claude Desktop, Claude Code, Cursor, Windsurf 등 로컬 MCP 클라이언트에
+  붙여 사용할 수 있습니다.
+- 필요하면 각 조직의 법무팀 playbook에 맞게 fork해서 수정할 수 있습니다.
+
+## 무엇을 해주나?
 
 법제처 API나 `korean-law-mcp`만 쓰면 "이 법령 찾아줘", "이 조문 보여줘"까지는
 잘 됩니다. 그런데 회사 담당자나 개인이 실제로 필요한 것은 그 다음입니다.
@@ -16,16 +121,6 @@ provider-neutral MCP/workflow pack입니다.
 `claude-for-legal-kr`은 이 후반부를 자동화합니다. 한국 법령 MCP를
 근거 엔진으로 쓰고, 그 위에 법무 비전문가가 이해할 수 있는 checklist,
 gap table, source status, review gate를 얹습니다.
-
-한 줄로 말하면:
-
-> 한국 법령을 찾아주는 MCP 위에, 법무 비전문가가 법무팀·변호사에게
-> 넘길 수 있는 초벌 쟁점 메모와 gap table을 만드는 workflow MCP.
-
-이 프로젝트는
-[`anthropics/claude-for-legal`](https://github.com/anthropics/claude-for-legal)의
-한국형 공개 fork입니다. 원본 Apache-2.0 라이선스, attribution
-전제는 유지합니다.
 
 ## 왜 좋은가?
 
