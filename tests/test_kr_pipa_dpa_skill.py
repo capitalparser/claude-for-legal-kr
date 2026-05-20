@@ -1,3 +1,6 @@
+import json
+import subprocess
+import sys
 from pathlib import Path
 
 
@@ -15,6 +18,15 @@ PLUGIN_SMOKE_DOC = ROOT / "docs" / "implementation" / "claude-code-plugin-smoke.
 LLM_ADAPTER_DOC = ROOT / "docs" / "implementation" / "generic-llm-adapter-contract.md"
 LLM_OUTPUT_SCHEMA = ROOT / "schemas" / "kr_pipa_dpa_review.schema.json"
 ADAPTER_SCAFFOLD = ROOT / "scripts" / "build_generic_llm_payload.py"
+UNIVERSAL_MCP = ROOT / "scripts" / "kr_legal_workflow_mcp.py"
+GENERAL_KR_WORKFLOW = ROOT / "references" / "korea" / "general-legal-review-workflow.md"
+UNIVERSAL_MCP_PLAN = (
+    ROOT
+    / "docs"
+    / "superpowers"
+    / "plans"
+    / "2026-05-20-universal-kr-legal-mcp-plan.md"
+)
 
 
 def read(path: Path) -> str:
@@ -231,3 +243,70 @@ def test_generic_llm_payload_builder_scaffold_exists():
         "response_schema",
     ]:
         assert phrase in script
+
+
+def test_universal_kr_legal_mcp_server_exposes_generic_tools():
+    script = read(UNIVERSAL_MCP)
+    workflow = read(GENERAL_KR_WORKFLOW)
+
+    for phrase in [
+        "kr_legal_source_search",
+        "kr_legal_review",
+        "provider-neutral",
+        "korean-law-mcp",
+        "requires_professional_review",
+        "LAW_OC",
+        "live_lookup",
+        "general-legal-review-workflow.md",
+    ]:
+        assert phrase in script
+
+    for phrase in [
+        "legal non-specialist",
+        "required_gaps",
+        "recommended_next_steps",
+        "verified_source",
+        "requires_professional_review",
+    ]:
+        assert phrase in workflow
+
+
+def test_universal_kr_legal_mcp_tools_list_smoke():
+    request = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/list"}) + "\n"
+    result = subprocess.run(
+        [sys.executable, str(UNIVERSAL_MCP)],
+        input=request,
+        capture_output=True,
+        text=True,
+        timeout=5,
+        check=True,
+    )
+    response = json.loads(result.stdout)
+    tool_names = {tool["name"] for tool in response["result"]["tools"]}
+
+    assert {"kr_legal_source_search", "kr_legal_review"} <= tool_names
+
+
+def test_readme_and_adapter_docs_position_mcp_for_legal_non_specialists():
+    readme = read(ROOT / "README.md")
+    adapter_doc = read(LLM_ADAPTER_DOC)
+    plan = read(UNIVERSAL_MCP_PLAN)
+
+    for phrase in [
+        "법무 비전문가",
+        "kr_legal_source_search",
+        "kr_legal_review",
+        "provider-neutral",
+    ]:
+        assert phrase in readme
+
+    for phrase in [
+        "legal non-specialist",
+        "Cursor",
+        "Windsurf",
+        "Generic MCP server",
+        "kr_legal_review",
+    ]:
+        assert phrase in adapter_doc
+
+    assert "Universal KR Legal MCP" in plan

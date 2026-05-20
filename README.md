@@ -1,26 +1,26 @@
 # Claude for Legal KR
 
-한국 법령 MCP를 **검색 도구**에서 **실무 검토 워크플로우**로 확장하는
-Claude legal skill pack입니다.
+한국 법령 MCP를 **검색 도구**에서 **실무 법무 워크플로우**로 확장하는
+provider-neutral MCP/workflow pack입니다.
 
-법제처 API나 `korean-law-mcp`만 쓰면 "개인정보보호법 제26조 찾아줘"까지는
-잘 됩니다. 그런데 실제 변호사·컴플라이언스 실무는 그 다음부터 시작됩니다.
+법제처 API나 `korean-law-mcp`만 쓰면 "이 법령 찾아줘", "이 조문 보여줘"까지는
+잘 됩니다. 그런데 회사 담당자나 개인이 실제로 필요한 것은 그 다음입니다.
 
-- 이 계약이 처리위탁인지, 제3자 제공 위험인지
-- 국외 이전 조항이 충분한지
-- 재위탁/subprocessor 통제가 있는지
-- AI 학습 목적이 위탁 범위를 넘는지
-- 어떤 항목이 blocking gap이고 어떤 항목은 개선 권고인지
-- 검토 메모를 어떤 형식으로 정리할지
+- 어떤 법령을 먼저 확인해야 하는지
+- 법무팀이나 변호사에게 무엇을 물어봐야 하는지
+- 어떤 사실관계가 빠져서 판단이 막히는지
+- 어떤 항목이 당장 막는 gap이고 어떤 항목은 개선 권고인지
+- 법령 근거가 실제 조회된 것인지, 모델 추론인지
+- 내부 검토 메모를 어떤 형식으로 정리할지
 
 `claude-for-legal-kr`은 이 후반부를 자동화합니다. 한국 법령 MCP를
-근거 엔진으로 쓰고, 그 위에 계약서/DPA/규제 검토용 checklist, gap table,
-source status, review gate를 얹습니다.
+근거 엔진으로 쓰고, 그 위에 법무 비전문가가 이해할 수 있는 checklist,
+gap table, source status, review gate를 얹습니다.
 
 한 줄로 말하면:
 
-> 한국 법령을 찾아주는 MCP 위에, 변호사·실무자가 검토할 수 있는
-> 초벌 검토 메모와 gap table을 만드는 workflow layer.
+> 한국 법령을 찾아주는 MCP 위에, 법무 비전문가가 법무팀·변호사에게
+> 넘길 수 있는 초벌 쟁점 메모와 gap table을 만드는 workflow MCP.
 
 이 프로젝트는
 [`anthropics/claude-for-legal`](https://github.com/anthropics/claude-for-legal)의
@@ -47,9 +47,11 @@ Review gate: 외부 사용 전 전문가 검토 필요
 
 ### 2. 한국 실무 쟁점을 checklist로 강제합니다
 
-첫 번째 구현 대상은 PIPA/DPA review입니다.
+목표는 특정 법령 전용 도구가 아니라 범용 한국 법무 workflow입니다.
+첫 번째 calibration example은 개인정보/PIPA review입니다.
 
-예를 들어 vendor DPA를 넣으면 다음을 확인하도록 설계되어 있습니다.
+예를 들어 개인정보가 걸린 vendor 계약을 넣으면 다음을 확인하도록
+설계되어 있습니다.
 
 - 처리위탁 vs 제3자 제공 risk
 - 개인정보 국외 이전
@@ -60,11 +62,12 @@ Review gate: 외부 사용 전 전문가 검토 필요
 - 삭제/반환 및 backup retention
 - privacy policy consistency
 
-### 3. 변호사를 대체하지 않고, junior reviewer 초안을 만듭니다
+### 3. 변호사를 대체하지 않고, 법무팀에 묻기 전 초안을 만듭니다
 
 이 프로젝트의 목표는 "법률 자문 자동화"가 아닙니다.
 
-목표는 변호사나 책임자가 검토할 수 있는 초벌 산출물을 빠르게 만드는 것입니다.
+목표는 법무 비전문가, 회사 담당자, 개인이 변호사나 책임자에게 가져갈 수
+있는 초벌 산출물을 빠르게 만드는 것입니다.
 
 - 누락 체크
 - clause-by-clause issue spotting
@@ -80,7 +83,7 @@ Review gate: 외부 사용 전 전문가 검토 필요
 | 구분 | 법제처 MCP / korean-law-mcp만 사용 | claude-for-legal-kr까지 사용 |
 |---|---|
 | 역할 | 법령·판례 검색 | 검색 결과를 실무 검토 절차에 적용 |
-| 입력 | 법령명, 조문번호, 자연어 질의 | 계약서, DPA, 약관, 업무 상황 |
+| 입력 | 법령명, 조문번호, 자연어 질의 | 계약서, 약관, 민원/업무 상황, 법무 질문 |
 | 출력 | 조문 원문, 검색 결과, MST/법령ID | 검토 메모, gap table, 위험 플래그, 수정 제안 |
 | 판단 구조 | 사용자가 직접 구성 | pass / conditional / fail |
 | 쟁점 분류 | 직접 판단 | required gaps / recommended improvements 분리 |
@@ -91,9 +94,43 @@ MCP는 source engine이고, 이 repo는 workflow layer입니다.
 
 ## 내 LLM에 어떻게 붙이나?
 
+Claude Code는 한 가지 실행 표면일 뿐입니다. 범용 MCP 클라이언트에서는
+아래 stdio server를 붙이면 됩니다.
+
+```json
+{
+  "mcpServers": {
+    "claude-for-legal-kr": {
+      "command": "python3",
+      "args": [
+        "/Users/kjun/vault/01_Projects/claude-for-legal-kr/scripts/kr_legal_workflow_mcp.py"
+      ],
+      "env": {
+        "LAW_OC": "<법제처 Open API OC 키>"
+      }
+    }
+  }
+}
+```
+
+현재 제공하는 범용 tool:
+
+- `kr_legal_source_search`: 한국 법령 조회 계획 또는 live lookup
+- `kr_legal_review`: 질문/문서/상황을 받아 법무 쟁점 메모용 payload 생성
+
+이 MCP server는 LLM provider를 직접 호출하지 않습니다. Claude, OpenAI,
+Cursor, Windsurf, LangChain, local model 등 MCP를 붙이는 쪽 LLM이 최종
+답변을 작성하고, 이 repo는 한국 법령 source와 workflow context를 제공합니다.
+
+PIPA/DPA는 `kr_legal_review(preset="privacy")`의 예시일 뿐이며, 장기적으로
+`general`, `commercial_contract`, `employment`, `corporate`, `tax`,
+`regulatory`, `litigation` preset을 확장할 수 있습니다.
+
+### Claude Code plugin으로 테스트하기
+
 현재는 Claude Code plugin 방식으로 가장 쉽게 테스트할 수 있습니다.
 
-### 1. 이 repo를 Claude Code plugin marketplace로 추가
+#### 1. 이 repo를 Claude Code plugin marketplace로 추가
 
 Claude Code에서:
 
@@ -107,7 +144,7 @@ Claude Code에서:
 /plugin marketplace add https://github.com/capitalparser/claude-for-legal-kr
 ```
 
-### 2. privacy plugin 설치
+#### 2. privacy plugin 설치
 
 ```text
 /plugin install privacy-legal@claude-for-legal
@@ -119,7 +156,7 @@ Claude Code를 재시작한 뒤 명령이 보이는지 확인합니다.
 /privacy-legal:kr-pipa-dpa-review
 ```
 
-### 3. 한국 법령 MCP 연결
+#### 3. 한국 법령 MCP 연결
 
 이 repo는 `korean-law-mcp`를 vendoring하지 않습니다. 별도 MCP/source connector로
 붙여서 씁니다.
@@ -201,17 +238,26 @@ python3 scripts/check_claude_plugin_contract.py
 [docs/implementation/claude-code-plugin-smoke.md](docs/implementation/claude-code-plugin-smoke.md)를
 참조하세요.
 
-Claude Code가 아닌 다른 LLM runtime에 붙이려면
-[docs/implementation/generic-llm-adapter-contract.md](docs/implementation/generic-llm-adapter-contract.md)와
-[schemas/kr_pipa_dpa_review.schema.json](schemas/kr_pipa_dpa_review.schema.json)을
-adapter contract로 사용하면 됩니다.
-
-현재 범용/OpenAI adapter는 contract와 schema 단계입니다. 실제 HTTP endpoint나
-OpenAI/Agents SDK wrapper는 다음 구현 단계입니다.
+Claude Code가 아닌 다른 LLM runtime에 붙이는 방식은
+[docs/implementation/generic-llm-adapter-contract.md](docs/implementation/generic-llm-adapter-contract.md)를
+참조하세요.
 
 ## 현재 구현된 한국형 workflow
 
+### MCP: `kr_legal_source_search`
+
+한국 법령 조회를 계획하거나, `LAW_OC`가 있을 때 `korean-law-mcp`를 통해
+live lookup을 실행합니다.
+
+### MCP: `kr_legal_review`
+
+문서, 질문, 업무 상황을 받아 LLM이 검토 메모를 작성할 수 있는 workflow
+payload를 반환합니다. 법률자문 완성본이 아니라 source status, gap,
+review gate가 포함된 초벌 검토 구조를 만듭니다.
+
 ### `/privacy-legal:kr-pipa-dpa-review`
+
+Claude Code plugin용 개인정보/PIPA calibration skill입니다.
 
 대상 문서:
 
