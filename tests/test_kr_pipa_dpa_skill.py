@@ -21,6 +21,8 @@ ADAPTER_SCAFFOLD = ROOT / "scripts" / "build_generic_llm_payload.py"
 UNIVERSAL_MCP = ROOT / "scripts" / "kr_legal_workflow_mcp.py"
 GENERAL_KR_WORKFLOW = ROOT / "references" / "korea" / "general-legal-review-workflow.md"
 LEGAL_MEMO_TEMPLATE = ROOT / "references" / "korea" / "legal-review-memo-template.md"
+ARCHITECTURE_SVG = ROOT / "docs" / "assets" / "local-mcp-architecture.svg"
+MEMO_PREVIEW_SVG = ROOT / "docs" / "assets" / "legal-review-memo-preview.svg"
 UNIVERSAL_MCP_PLAN = (
     ROOT
     / "docs"
@@ -369,3 +371,36 @@ def test_kr_legal_review_defaults_to_korean_legal_review_memo_output():
 
     for phrase in ["법률검토 내역서", "사안의 개요", "검토 한계 및 주의문구"]:
         assert phrase in template
+
+
+def test_readme_embeds_visual_assets_for_local_mcp_story():
+    readme = read(ROOT / "README.md")
+    architecture = read(ARCHITECTURE_SVG)
+    memo_preview = read(MEMO_PREVIEW_SVG)
+
+    for path in [
+        "docs/assets/local-mcp-architecture.svg",
+        "docs/assets/legal-review-memo-preview.svg",
+    ]:
+        assert path in readme
+
+    for svg in [architecture, memo_preview]:
+        assert svg.lstrip().startswith("<svg")
+        assert "<script" not in svg.lower()
+        assert "<foreignObject" not in svg
+
+    for phrase in [
+        "로컬 MCP 클라이언트",
+        "claude-for-legal-kr",
+        "법제처 API",
+        "법률검토 내역서",
+    ]:
+        assert phrase in architecture
+
+    for phrase in [
+        "검토 결론",
+        "관련 법령 및 확인 근거",
+        "주요 쟁점별 검토",
+        "법무팀/변호사에게 전달할 질문",
+    ]:
+        assert phrase in memo_preview

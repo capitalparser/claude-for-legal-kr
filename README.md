@@ -9,12 +9,7 @@ Claude Code, Cursor, Windsurf 같은 MCP 클라이언트에 붙여 사용할 수
 목표는 법률자문 자동화가 아니라, 회사 담당자나 개인이 법무팀·변호사에게
 묻기 전 필요한 쟁점과 자료를 **법률검토 내역서 초안**으로 정리하는 것입니다.
 
-```text
-로컬 MCP 클라이언트
-  -> claude-for-legal-kr
-    -> korean-law-mcp / 법제처 API
-    -> 법률검토 내역서 초안 + source status + 전문가 검토 gate
-```
+![Local MCP architecture](docs/assets/local-mcp-architecture.svg)
 
 한 줄로 말하면:
 
@@ -219,6 +214,8 @@ Cursor, Windsurf, LangChain, local model 등 MCP를 붙이는 쪽 LLM이 최종
 
 `kr_legal_review`의 기본 사용자 표시 결과물은 개발자용 JSON이 아니라 다음
 형식의 한국어 문서입니다.
+
+![Korean legal review memo preview](docs/assets/legal-review-memo-preview.svg)
 
 ```text
 법률검토 내역서
