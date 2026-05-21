@@ -28,55 +28,56 @@
   <text x="54" y="90" class="subtitle">API 키와 검토 문서는 로컬에 두고, LLM에는 검토 가능한 workflow context만 제공합니다.</text>
 
   <g filter="url(#shadow)">
-    <rect x="54" y="138" width="236" height="168" rx="18" fill="#ffffff" stroke="#dbeafe"/>
-    <rect x="78" y="162" width="72" height="25" rx="12.5" fill="#e0f2fe"/>
-    <text x="96" y="180" class="badge">LOCAL</text>
-    <text x="78" y="220" class="card-title">로컬 MCP 클라이언트</text>
-    <text x="78" y="250" class="card-sub">Codex · Claude Desktop</text>
-    <text x="78" y="274" class="card-sub">Claude Code · Cursor · Windsurf</text>
+    <rect x="42" y="138" width="220" height="168" rx="18" fill="#ffffff" stroke="#dbeafe"/>
+    <rect x="66" y="162" width="72" height="25" rx="12.5" fill="#e0f2fe"/>
+    <text x="84" y="180" class="badge">LOCAL</text>
+    <text x="66" y="220" class="card-title">로컬 MCP 클라이언트</text>
+    <text x="66" y="250" class="card-sub">Codex · Claude Desktop</text>
+    <text x="66" y="274" class="card-sub">Claude Code · Cursor</text>
   </g>
 
   <g filter="url(#shadow)">
-    <rect x="352" y="138" width="246" height="168" rx="18" fill="#ffffff" stroke="#bfdbfe"/>
-    <rect x="376" y="162" width="95" height="25" rx="12.5" fill="#dbeafe"/>
-    <text x="393" y="180" class="badge">WORKFLOW</text>
-    <text x="376" y="220" class="card-title">claude-for-legal-kr</text>
-    <text x="376" y="250" class="card-sub">한국 법무 workflow MCP</text>
-    <text x="376" y="274" class="card-sub">source status · review gate</text>
+    <rect x="316" y="138" width="240" height="168" rx="18" fill="#ffffff" stroke="#bfdbfe"/>
+    <rect x="340" y="162" width="95" height="25" rx="12.5" fill="#dbeafe"/>
+    <text x="357" y="180" class="badge">WORKFLOW</text>
+    <text x="340" y="220" class="card-title">claude-for-legal-kr</text>
+    <text x="340" y="250" class="card-sub">한국 법무 workflow MCP</text>
+    <text x="340" y="274" class="card-sub">source status · review gate</text>
   </g>
 
   <g filter="url(#shadow)">
-    <rect x="660" y="138" width="220" height="168" rx="18" fill="#ffffff" stroke="#bae6fd"/>
-    <rect x="684" y="162" width="78" height="25" rx="12.5" fill="#e0f2fe"/>
-    <text x="700" y="180" class="badge">SOURCE</text>
-    <text x="684" y="220" class="card-title">korean-law-mcp</text>
-    <text x="684" y="250" class="card-sub">법령 검색 · 조문 조회</text>
-    <text x="684" y="274" class="card-sub">MST · article text</text>
+    <rect x="610" y="138" width="220" height="168" rx="18" fill="#ffffff" stroke="#bae6fd"/>
+    <rect x="634" y="162" width="78" height="25" rx="12.5" fill="#e0f2fe"/>
+    <text x="650" y="180" class="badge">SOURCE</text>
+    <text x="634" y="220" class="card-title">korean-law-mcp</text>
+    <text x="634" y="250" class="card-sub">법령 검색 · 조문 조회</text>
+    <text x="634" y="274" class="card-sub">MST · article text</text>
   </g>
 
   <g filter="url(#shadow)">
-    <rect x="942" y="138" width="164" height="168" rx="18" fill="#ffffff" stroke="#bbf7d0"/>
-    <rect x="966" y="162" width="54" height="25" rx="12.5" fill="#dcfce7"/>
-    <text x="981" y="180" class="badge" fill="#166534">API</text>
-    <text x="966" y="220" class="card-title">법제처 API</text>
-    <text x="966" y="250" class="card-sub">공식 법령 근거</text>
-    <text x="966" y="274" class="card-sub">LAW_OC는 로컬 env</text>
+    <rect x="884" y="138" width="232" height="168" rx="18" fill="#ffffff" stroke="#bbf7d0"/>
+    <rect x="908" y="162" width="54" height="25" rx="12.5" fill="#dcfce7"/>
+    <text x="923" y="180" class="badge" fill="#166534">API</text>
+    <text x="908" y="220" class="card-title">법제처 API</text>
+    <text x="908" y="250" class="card-sub">공식 법령 근거</text>
+    <text x="908" y="274" class="card-sub">LAW_OC는 로컬 env</text>
   </g>
 
-  <path d="M 300 222 L 342 222" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow)"/>
-  <path d="M 608 222 L 650 222" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow)"/>
-  <path d="M 890 222 L 932 222" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow)"/>
-  <text x="309" y="203" class="arrow-label">tools/call</text>
-  <text x="617" y="203" class="arrow-label">lookup</text>
-  <text x="898" y="203" class="arrow-label">official</text>
+  <path d="M 272 222 L 306 222" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M 566 222 L 600 222" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M 840 222 L 874 222" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="270" y="203" class="arrow-label">tools/call</text>
+  <text x="568" y="203" class="arrow-label">lookup</text>
+  <text x="843" y="203" class="arrow-label">official</text>
 
   <g filter="url(#shadow)">
     <rect x="210" y="368" width="740" height="104" rx="18" fill="#111827"/>
     <text x="248" y="406" class="card-title" fill="#ffffff">법률검토 내역서 초안</text>
-    <text x="248" y="437" class="card-sub" fill="#d1d5db">검토 결론 · 관련 법령 및 확인 근거 · 주요 쟁점 · 필수 보완사항 · 법무팀/변호사 질문</text>
-    <text x="248" y="462" class="small" fill="#93c5fd">법률자문 아님 · 외부 제출/계약 체결 전 전문가 검토 필요</text>
+    <text x="248" y="437" class="card-sub" fill="#e5e7eb">검토 결론 · 관련 법령 및 확인 근거 · 주요 쟁점 · 필수 보완사항 · 법무팀/변호사 질문</text>
+    <text x="248" y="462" class="small" fill="#bfdbfe">법률자문 아님 · 외부 제출/계약 체결 전 전문가 검토 필요</text>
   </g>
 
-  <path d="M 475 316 C 475 344 580 340 580 360" stroke="#2563eb" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
-  <path d="M 770 316 C 770 344 580 340 580 360" stroke="#2563eb" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 436 316 L 436 336 C 436 352 580 352 580 362" stroke="#2563eb" stroke-width="3" fill="none"/>
+  <path d="M 720 316 L 720 336 C 720 352 580 352 580 362" stroke="#2563eb" stroke-width="3" fill="none"/>
+  <path d="M 580 362 L 580 366" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow)"/>
 </svg>
