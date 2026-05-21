@@ -170,15 +170,47 @@ Review gate: 외부 사용 전 전문가 검토 필요
 
 ## 법제처 MCP만 쓸 때와 무엇이 다른가?
 
-| 구분 | 법제처 MCP / korean-law-mcp만 사용 | claude-for-legal-kr까지 사용 |
-|---|---|
-| 역할 | 법령·판례 검색 | 검색 결과를 실무 검토 절차에 적용 |
-| 입력 | 법령명, 조문번호, 자연어 질의 | 계약서, 약관, 민원/업무 상황, 법무 질문 |
-| 출력 | 조문 원문, 검색 결과, MST/법령ID | 검토 메모, gap table, 위험 플래그, 수정 제안 |
-| 판단 구조 | 사용자가 직접 구성 | pass / conditional / fail |
-| 쟁점 분류 | 직접 판단 | required gaps / recommended improvements 분리 |
-| 출처 처리 | 법령 조회 중심 | verified_source / model_inference 구분 |
-| 안전장치 | citation 확인 | citation + source status + review gate |
+<table>
+  <thead>
+    <tr>
+      <th>구분</th>
+      <th>법제처 MCP / korean-law-mcp만 사용</th>
+      <th>claude-for-legal-kr까지 사용</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>역할</strong></td>
+      <td>법령·판례 검색</td>
+      <td>검색 결과를 실무 검토 절차에 적용</td>
+    </tr>
+    <tr>
+      <td><strong>입력</strong></td>
+      <td>법령명, 조문번호, 자연어 질의</td>
+      <td>계약서, 약관, 민원/업무 상황, 법무 질문</td>
+    </tr>
+    <tr>
+      <td><strong>출력</strong></td>
+      <td>조문 원문, 검색 결과, MST/법령ID</td>
+      <td>법률검토 내역서, gap table, 위험 플래그, 수정 제안</td>
+    </tr>
+    <tr>
+      <td><strong>판단 구조</strong></td>
+      <td>사용자가 직접 구성</td>
+      <td>검토 결론, 필수 보완사항, 권고사항으로 분리</td>
+    </tr>
+    <tr>
+      <td><strong>출처 처리</strong></td>
+      <td>법령 조회 중심</td>
+      <td>실제 조회 근거와 모델 추론을 구분</td>
+    </tr>
+    <tr>
+      <td><strong>안전장치</strong></td>
+      <td>citation 확인</td>
+      <td>source status와 전문가 검토 gate 포함</td>
+    </tr>
+  </tbody>
+</table>
 
 MCP는 source engine이고, 이 repo는 workflow layer입니다.
 
